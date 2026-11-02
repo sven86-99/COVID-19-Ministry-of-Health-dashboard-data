@@ -206,7 +206,7 @@ prioritised older people before progressively extending eligibility to
 younger age groups, vaccination status is correlated with age.
 Consequently, age is a potential confounding variable when comparing
 mortality between vaccination groups. The potential for Simpson’s
-paradox must be considered when interpreting the results.
+paradox must be considered when interpreting the metrics.
 
 Visualising the cumulative COVID-19 Deaths over time conditioned on
 Vaccination Status, and Age category.

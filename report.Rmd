@@ -17,6 +17,9 @@ library(lattice)
 library(gridExtra)
 library(data.table)
 
+svgDir <- "svg"
+dir.create(svgDir, showWarning = FALSE)
+
 ```
 
 
@@ -164,6 +167,10 @@ plotObj <- xyplot(Cases ~ Date, data=x,  main=list("MoH Reported Cases", cex=0.9
   panel.text(as.POSIXct("2022-05-3 0:00")+86400*12, 1000000, "3 dose uptick", srt=90, cex=0.6)
 })
 print(plotObj)
+
+svg(file.path(svgDir, "cases.svg"))
+print(plotObj)
+graphics.off()
 ```
 
 There is an acceleration of reported COVID-19 cases in the `Triple Vax` category, the crossover point is around 3 May 2022.
@@ -247,9 +254,9 @@ plotObj2 <- xyplot(log10(Cases) ~ Date, data=x, groups=Status, main=list("MoH Re
 print(plotObj2)
 
 
-# png("tmp/NZ_cases.png")
-# print(plotObj2)
-# graphics.off()
+svg(file.path(svgDir, "log_cases.svg"))
+print(plotObj2)
+graphics.off()
 ```
 
 The $\log_{10}$ transformation highlights a Ministry of Health classification error in data reporting.
@@ -275,6 +282,10 @@ plotObj <- xyplot(Hospitalization ~ Date, data=x,  main=list("MoH Reported Hospi
   # panel.text(as.POSIXct("2022-07-11 0:00")+86400*12, 1000, "Classification errors", srt = 90, col="red", cex=0.6)
 })
 print(plotObj)
+
+svg(file.path(svgDir, "hospitalization.svg"))
+print(plotObj)
+graphics.off()
 ```
 
 
@@ -359,6 +370,10 @@ plotObj2 <- xyplot(log10(Hospitalization) ~ Date, data=x, groups=Status,
   panel.text(as.POSIXct("2022-07-11 0:00")+86400*12, log10(250), "Reporting errors", srt = 90, col="red", cex=0.6)
 })
 print(plotObj2)
+
+svg(file.path(svgDir, "log_hospitalization.svg"))
+print(plotObj2)
+graphics.off()
 ```
 
 
@@ -373,6 +388,10 @@ plotObj <- xyplot(ICU ~ Date, data=x,  main=list("MoH Reported ICU", cex=0.9),
   panel.superpose(x,y, pch=16, cex=0.3, ...)
 })
 print(plotObj)
+
+svg(file.path(svgDir, "ICU.svg"))
+print(plotObj)
+graphics.off()
 ```
 
 
@@ -385,6 +404,10 @@ plotObj2 <- xyplot(log10(ICU) ~ Date, data=x, groups=Status, main=list("MoH Repo
   # panel.text(as.POSIXct("2022-07-11 0:00")+86400*15, log10(1000), "Classification errors", srt = 90, col="red", cex=0.8)
 })
 print(plotObj2)
+
+svg(file.path(svgDir, "log_ICU.svg"))
+print(plotObj)
+graphics.off()
 ```
 
 
@@ -457,7 +480,7 @@ Visualising the cumulative COVID-19 Deaths over time conditioned on Vaccination 
 ```{r plot_deaths, echo = FALSE, fig.height = 7, fig.width = 7}
 myKey <- simpleKey(text=sort(unique(deaths$Age_group)), columns=5, space = "top")
  
-plotobj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2, y=0.2), groups=Age_group,
+plotObj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2, y=0.2), groups=Age_group,
 				  aspect=1.5, scales=list(alternating=FALSE), key=myKey,  type="b", pch=16, cex=0.3,
 				  ylab = "COVID-19 Deaths within 28 days",
 				  main="Ministry of Health Reported Deaths by Vacciation status",
@@ -471,19 +494,11 @@ plotobj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2
 
 ## MoH Report: COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND September 2022
 
-print(plotobj)
+print(plotObj)
 
-# png("deaths.png")
-# print(plotobj)
-# graphics.off()
-
-# pdf("deaths.pdf")
-# print(plotobj)
-# graphics.off()
-# 
-# tiff("deaths.tiff")
-# print(plotobj)
-# graphics.off()
+svg(file.path(svgDir, "deaths.png"))
+print(plotObj)
+graphics.off()
 ```
 
 The cumulative trend suggests that deaths due to COVID-19 were significantly higher in the vaccinated group with $\ge 3\; \mbox{doses}$ across all age groups.
