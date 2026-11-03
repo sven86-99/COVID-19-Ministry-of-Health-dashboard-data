@@ -121,9 +121,14 @@ reporting error by the Ministry of Health.
 
 ### Reported Cases 2022-02-11 to 2024-02-18
 
-This metric did not stratify by any age categories.
+The metric provided was not stratified by any age categories.
 
-![](report_files/figure-gfm/plot_cases-1.png)<!-- -->
+<figure>
+<img src="report_files/figure-gfm/plot_cases-1.png"
+alt="Cases versus Time by Vaccination Status" />
+<figcaption aria-hidden="true">Cases versus Time by Vaccination
+Status</figcaption>
+</figure>
 
 There is an acceleration of reported COVID-19 cases in the `Triple Vax`
 category, the crossover point is around 3 May 2022.
@@ -131,16 +136,26 @@ category, the crossover point is around 3 May 2022.
 There are also so few cases in the single dose category that a
 $\log_{10}$ transformation is required.
 
-![](report_files/figure-gfm/plot_logcases-1.png)<!-- -->
+<figure>
+<img src="report_files/figure-gfm/plot_logcases-1.png"
+alt="log10(Cases) versus Time by Vaccination Status" />
+<figcaption aria-hidden="true">log10(Cases) versus Time by Vaccination
+Status</figcaption>
+</figure>
 
 The $\log_{10}$ transformation highlights a Ministry of Health
 classification error in data reporting.
 
 ### Reported Hospitalizations 2022-02-11 to 2024-02-18
 
-This metric did not stratify by any age categories.
+The metric provided was not stratified by any age categories.
 
-![](report_files/figure-gfm/plot_hospitalization-1.png)<!-- -->
+<figure>
+<img src="report_files/figure-gfm/plot_hospitalization-1.png"
+alt="Hospitalization Cases versus Time by Vaccination Status" />
+<figcaption aria-hidden="true">Hospitalization Cases versus Time by
+Vaccination Status</figcaption>
+</figure>
 
 There is an acceleration of reported COVID-19 cases in the `Triple Vax`
 category, the crossover point is around 2 June 2922. This is a lag of
@@ -149,15 +164,33 @@ around a month from the Case crossover point of 3 May 2022.
 There are also so few cases in the single dose category that a
 $\log_{10}$ transformation is required.
 
-![](report_files/figure-gfm/plot_logHospitalization-1.png)<!-- -->
+<figure>
+<img src="report_files/figure-gfm/plot_logHospitalization-1.png"
+alt="log10(Hospitalization Cases) versus Time by Vaccination Status" />
+<figcaption aria-hidden="true">log10(Hospitalization Cases) versus Time
+by Vaccination Status</figcaption>
+</figure>
 
 ### Reported ICU 2022-02-11 to 2024-02-18
 
-This metric did not stratify by any age categories.
+The metric provided was not stratified by any age categories.
 
-![](report_files/figure-gfm/plot_ICU-1.png)<!-- -->
+<figure>
+<img src="report_files/figure-gfm/plot_ICU-1.png"
+alt="ICU Cases versus Time by Vaccination Status" />
+<figcaption aria-hidden="true">ICU Cases versus Time by Vaccination
+Status</figcaption>
+</figure>
 
-![](report_files/figure-gfm/plot_logICU-1.png)<!-- -->
+There are also so few cases in the single dose category that a
+$\log_{10}$ transformation is required.
+
+<figure>
+<img src="report_files/figure-gfm/plot_logICU-1.png"
+alt="log10(ICU Cases) versus Time by Vaccination Status" />
+<figcaption aria-hidden="true">log10(ICU Cases) versus Time by
+Vaccination Status</figcaption>
+</figure>
 
 ## Ministry of Health reported Deaths
 
@@ -191,7 +224,7 @@ categorized by vaccine status published by the Ministry of Health.
 
 <div class="figure">
 
-<img src="Screen Shot 2023-11-26 at 9.16.30 AM.png" alt="Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM" width="470" />
+<img src="Screen Shot 2023-11-26 at 9.16.30 AM.png" alt="Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM" width="400" />
 <p class="caption">
 
 Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM
@@ -199,7 +232,7 @@ Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM
 
 </div>
 
-It can be inferred from this image that on 26 November 2023 the
+It can be inferred from this Figure 8 that on 26 November 2023 the
 Vaccination categories in the New Zealand population were:
 
 1.  People with $\le 1\; \mbox{dose}$ equals 18%;
@@ -228,7 +261,12 @@ paradox must be considered when interpreting the metrics.
 Visualising the cumulative COVID-19 Deaths over time conditioned on
 Vaccination Status, and Age category.
 
-![](report_files/figure-gfm/plot_deaths-1.png)<!-- -->
+<figure>
+<img src="report_files/figure-gfm/plot_deaths-1.png"
+alt="Deaths versus Time conditioned by Vaccination Status and a legend for Age categories" />
+<figcaption aria-hidden="true">Deaths versus Time conditioned by
+Vaccination Status and a legend for Age categories</figcaption>
+</figure>
 
 The cumulative trend suggests that deaths due to COVID-19 were
 significantly higher in the vaccinated group with $\ge 3\; \mbox{doses}$
@@ -269,3 +307,8 @@ released data is recommended to assess the methodology, statistical
 rigor, and validate the reported findings to evaluate the robustness of
 conclusions drawn from the Ministry of Healths underlying proprietary
 collected datasets during COVID-19.
+
+This evidence from Ministry of Health dashboard data provided to the
+public has significant implications on motivation for the remit of the
+*[Royal Commission of Inquiry into COVID-19 Lessons Learned (Phase One
+and Phase Two)](https://www.covid19lessons.royalcommission.nz)*
