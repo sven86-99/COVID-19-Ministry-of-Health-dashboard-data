@@ -80,11 +80,20 @@ $154,000 + 233,000 = 387,000$ unvaccinated, a multiplier of
 $387/154 = 2.51$ times.
 
 The following screen shot was taken on 8 May 2022 from
-<https://covid19map.co.nz/cases>. It illustrates the underestimate in
-the total population using a figure of 153,252 for the unvaccinated
+https://covid19map.co.nz/cases. It illustrates the underestimate in the
+total population using a figure of 153,252 for the unvaccinated
 population.
 
-<img src="Screen Shot 2022-05-08 at 3.10.02 PM.png" width="470" />
+<div class="figure">
+
+<img src="Screen Shot 2022-05-08 at 3.10.02 PM.png" alt="Screenshot of https://covid19map.co.nz/cases on 2022-05-08 at 3.10.02 PM" width="470" />
+<p class="caption">
+
+Screenshot of <https://covid19map.co.nz/cases> on 2022-05-08 at 3.10.02
+PM
+</p>
+
+</div>
 
 *Note: The relative risk of a person having a booster was 0.8x*
 ***less*** *likely to catch COVID-19 than an unvaccinated person. This
@@ -180,7 +189,15 @@ however the screenshot from 26 November 2023 provides an approximate
 snapshot at that date of the proportion of the New Zealand population
 categorized by vaccine status published by the Ministry of Health.
 
-<img src="Screen Shot 2023-11-26 at 9.16.30 AM.png" width="470" />
+<div class="figure">
+
+<img src="Screen Shot 2023-11-26 at 9.16.30 AM.png" alt="Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM" width="470" />
+<p class="caption">
+
+Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM
+</p>
+
+</div>
 
 It can be inferred from this image that on 26 November 2023 the
 Vaccination categories in the New Zealand population were:
