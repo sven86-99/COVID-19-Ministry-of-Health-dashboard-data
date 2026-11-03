@@ -482,7 +482,7 @@ myKey <- simpleKey(text=sort(unique(deaths$Age_group)), columns=5, space = "top"
 plotObj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2, y=0.2), groups=Age_group,
 				  aspect=1.5, scales=list(alternating=FALSE), key=myKey,  type="b", pch=16, cex=0.3,
 				  ylab = "COVID-19 Deaths within 28 days",
-				  main="Ministry of Health Reported Deaths by Vacciation status",
+				  main="Ministry of Health Reported Deaths by Vaccination status",
 				  layout=c(3, 1),  
                   panel=function(x,y, ...){
                     panel.grid(...)
