@@ -82,12 +82,11 @@ The underlying issue is that vaccination records are expected to be reasonably a
 This has important implications for interpreting reported infection rates and other relative risk measures in any publication prior to 4 August 2022
 when comparing vaccinated to unvaccinated. For example, if prior to using the HSU 2021 database the unvaccinated population was estimated to be 153,000 people, this would increase to $154,000 + 233,000 = 387,000$ unvaccinated, a multiplier of $387/154 = 2.51$ times.
 
-The following screen shot was taken on 8 May 2022 from https://covid19map.co.nz/cases. It illustrates the underestimate in the
-total population using a figure of 153,252 for the unvaccinated population.
+The following screen shot was taken on 8 May 2022 from https:<span>//</span>covid19map.co.nz/cases. It illustrates the underestimate in the total population using a figure of 153,252 for the unvaccinated population.
 
 \vspace{0.5cm}
 
-```{r, echo=FALSE, out.width=470}
+```{r, echo=FALSE, out.width=470, fig.cap="Screenshot of https://covid19map.co.nz/cases on 2022-05-08 at 3.10.02 PM"}
 knitr::include_graphics("Screen Shot 2022-05-08 at 3.10.02 PM.png")
 ```
 
@@ -454,7 +453,7 @@ Insufficient information was provided by the Ministry of Health to estimate rela
 however the screenshot from 26 November 2023 provides an approximate snapshot at that date of the proportion of the New Zealand population categorized by vaccine status published by the Ministry of Health.
 
 
-```{r, echo=FALSE, out.width=470}
+```{r, echo=FALSE, out.width=470, fig.cap="Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM"}
 knitr::include_graphics("Screen Shot 2023-11-26 at 9.16.30 AM.png")
 ```
 
@@ -496,7 +495,7 @@ plotObj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2
 
 print(plotObj)
 
-svg(file.path(svgDir, "deaths.png"))
+svg(file.path(svgDir, "deaths.svg"))
 print(plotObj)
 graphics.off()
 ```
