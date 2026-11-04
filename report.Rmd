@@ -8,14 +8,17 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.width = 5,
                       fig.height = 5 * 0.75) ## , fig.path=""
 
-library(readxl)
+
 library(car)
-library(dplyr)
-library(ggplot2)
-library(tidyr)
-library(lattice)
-library(gridExtra)
 library(data.table)
+library(dplyr)
+library(lattice)
+library(ggplot2)
+library(gridExtra)
+library(readxl)
+library(testthat)
+library(tidyr)
+
 
 svgDir <- "svg"
 dir.create(svgDir, showWarning = FALSE)
@@ -66,12 +69,13 @@ The publicly disclosed data lack sufficient age group detail and concise categor
 
 ## Underestimation of the Population
 
-Prior to 4 August 2022, the Ministry of Health underestimated the New Zealand population, this introduced a significant bias in the number of unvaccinated people in New Zealand. This discrepancy arose from its use of the HSU2020 dataset, which introduced bias into metrics used to estimate relative risks between vaccinated and unvaccinated populations.
+Prior to 4 August 2022, the Ministry of Health underestimated the New Zealand population, this introduced a significant bias in the number of unvaccinated people in New Zealand. This discrepancy arose from its use of the HSU2020 dataset, which introduced bias into metrics used to estimate relative risks between vaccinated and unvaccinated populations. The following announcement on
+youtube describes the issue understating its significance to the estimated number of unvaccinated people.
 
 https://www.youtube.com/watch?v=tL06sCjQHxo&t=364s
 
 
-The underlying issue is that vaccination records are expected to be reasonably accurate as individuals receive vaccinations and are recorded in relevant databases. However, the estimated total population was underestimated. By switching to the updated HSU 2021 database, the residual population classified as unvaccinated increased by an additional 233,000 people. Consequently, the estimated size of the unvaccinated population is substantially larger than had been used in any publication prior to 4 August 2022.
+The underlying issue is that vaccination records are expected to be reasonably accurate as individuals receive vaccinations and are recorded in relevant databases. However, the estimated total population was significantly underestimated. By switching to the updated HSU 2021 database, the residual population classified as unvaccinated increased by an additional 233,000 people. Consequently, the estimated size of the unvaccinated population is substantially larger than had been used in any publication prior to 4 August 2022.
 
 \begin{equation}
 \begin{aligned}
@@ -79,10 +83,9 @@ The underlying issue is that vaccination records are expected to be reasonably a
 \end{aligned}
 \end{equation}
 
-This has important implications for interpreting reported infection rates and other relative risk measures in any publication prior to 4 August 2022
-when comparing vaccinated to unvaccinated. For example, if prior to using the HSU 2021 database the unvaccinated population was estimated to be 153,000 people, this would increase to $154,000 + 233,000 = 387,000$ unvaccinated, a multiplier of $387/154 = 2.51$ times.
+This has important implications for interpreting reported infection rates and other relative risk measures in any publication prior to 4 August 2022 when comparing vaccinated to unvaccinated. For example, if prior to using the HSU 2021 database the unvaccinated population was estimated to be 153,000 people, this would increase to $154,000 + 233,000 = 387,000$ unvaccinated, a multiplier of $387/154 = 2.51$ times.
 
-The following screen shot was taken on 8 May 2022 from https:<span>//</span>covid19map.co.nz/cases. It illustrates the underestimate in the total population using a figure of 153,252 for the unvaccinated population.
+The following screen shot was taken on 8 May 2022 from https:<span>//</span>covid19map.co.nz/cases. It illustrates the underestimate in the total population using an estimate of 153,252 for the unvaccinated population.
 
 \vspace{0.5cm}
 
@@ -103,22 +106,24 @@ _Note: The relative risk of a person having a booster was 0.8x_ ___less___ _like
 
 ## Ministry of Health Cases
 
-The data was recorded as a cumulative tally by vaccination status over time in the form;
+The data were recorded as cumulative tallies, categorised by vaccination status and updated over time. One advantage of using cumulative data is that discrepancies or inconsistencies in the recorded figures may be identified and corrected by Ministry of Health staff as records are subsequently reviewed and updated. The data was collected in the following format:
 
 ```{r load_cases, echo=FALSE}
-x <- read_xlsx("covid_healthdata.xlsx", col_types=c("date","text","numeric", "numeric", "numeric", "text", "numeric", "numeric", "numeric"), sheet="Vaccination", na = c("", "NA"))
+cases_raw <- read_xlsx("covid_healthdata.xlsx", col_types=c("date","text","numeric", "numeric", "numeric", "text", "numeric", "numeric", "numeric"), sheet="Vaccination", na = c("", "NA"))
 
 ## Coerce to integers
-i <- vapply(x, is.numeric, logical(1)) &
-     !vapply(x, inherits, logical(1), "Date") &
-     !vapply(x, inherits, logical(1), "POSIXt")
+i <- vapply(cases_raw, is.numeric, logical(1)) &
+     !vapply(cases_raw, inherits, logical(1), "Date") &
+     !vapply(cases_raw, inherits, logical(1), "POSIXt")
 
-x[i] <- lapply(x[i], as.integer)
+cases_raw[i] <- lapply(cases_raw[i], as.integer)
 
 ## Remove the Total column
-x <- subset(x, ! Type %in% "Total")
+cases       <- subset(cases_raw, ! Type %in% "Total")
+cases_total <- subset(cases_raw, Type %in% "Total")
 
-x$Status <- car::recode(x$Type, 
+
+cases$Status <- car::recode(cases$Type,
 "'Received booster at least 7 days before being reported as a case' = 'Triple vax';
 'Fully vaccinated at least 7 days before reported as a case' = 'Double vax';
 'Partially vaccinated' = 'Single vax';
@@ -128,15 +133,15 @@ x$Status <- car::recode(x$Type,
 'Under 12 years old' = 'Not eligible'")
 
 
-knitr::kable(head(x[,c("Date", "Status", "Cases", "Hospitalization", "ICU")]))
+knitr::kable(head(cases[,c("Date", "Status", "Cases", "Hospitalization", "ICU")]))
 
-x_wide_cases <- x_wide <- spread(x[, c("Date", "Status", "Cases")], Status, Cases)
+cases_wide <- spread(cases[, c("Date", "Status", "Cases")], Status, Cases)
 ```
 
 Any value which is less than the previous daily/weekly total is a reporting error by the Ministry of Health.
 
 
-### Reported Cases `r as.Date(min(x$Date))` to `r as.Date(max(x$Date))`
+### Reported Cases `r as.Date(min(cases$Date))` to `r as.Date(max(cases$Date))`
 
 The metric provided was not stratified by any age categories.
 
@@ -149,20 +154,21 @@ my_colours <- c("#0072B2", "#E69F00", "#009E73", "#CC79A7", "#D55E00")
 ## c("#0072B2", "#E69F00", "#009E73", "#D55E00", "#56B4E9", "#F0E442", "#CC79A7") #
 
 
-status_levels <- unique(x$Status)[c(5,1,3,4,2)] 
-x$Status <- factor(x$Status, levels = status_levels)
+status_levels <- c("Triple vax", "Unvaccinated", "Double vax", "Not eligible",  "Single vax")
+## unique(cases$Status)[c(5,1,3,4,2)]
+cases$Status <- factor(cases$Status, levels = status_levels)
 
 par_superpose <- trellis.par.get("superpose.symbol")
 par_superpose$col[1:5] <- my_colours
 par_superpose$pch[1:5] <- 16
 trellis.par.set("superpose.symbol", par_superpose)
 
-myKey <- simpleKey(text=levels(x$Status), columns=3, cex=0.6, points = TRUE, byrow = TRUE)
+myKey <- simpleKey(text=levels(cases$Status), columns=3, cex=0.6, points = TRUE, byrow = TRUE)
 ```
 
 
 ```{r plot_cases, echo=FALSE, fig.pos = "!h", fig.cap = "Cases versus Time by Vaccination Status"}
-plotObj <- xyplot(Cases ~ Date, data=x,  main=list("MoH Reported Cases", cex=0.9), 
+plotObj <- xyplot(Cases ~ Date, data=cases,  main=list("MoH Reported Cases", cex=0.9),
 				  groups=Status, type="b", key=myKey, col = my_colours,
 				  panel=function(x,y, ...){
   panel.superpose(x,y, pch=16, cex=0.3, ...)
@@ -248,10 +254,10 @@ knitr::kable(moH_wide |>
 There are also so few cases in the single dose category that a $\log_{10}$ transformation is required. 
 
 ```{r plot_logcases, echo=FALSE, fig.pos = "!h", fig.cap = "log10(Cases) versus Time by Vaccination Status"}
-plotObj2 <- xyplot(log10(Cases) ~ Date, data=x, groups=Status, main=list("MoH Reported Cases", cex=0.9),
+plotObj2 <- xyplot(log10(Cases) ~ Date, data=cases, groups=Status, main=list("MoH Reported Cases", cex=0.9),
                   scales = list(y = list(at=1:10, label=sprintf("%0.f", 10^(1:10)))),
                   type="b", key=myKey, col = my_colours, panel=function(x,y, ...){
-  panel.superpose(x,y, pch=16, cex=0.3, ...)
+  panel.superpose(x, y, pch=16, cex=0.3, ...)
   panel.abline(v=as.POSIXct("2022-05-3 0:00"), lty=3, col="black", lwd=0.4)
   
   panel.text(as.POSIXct("2022-05-3 0:00")-86400*12, log10(100000), "3 May 2022", srt=90, cex=0.6)
@@ -270,18 +276,18 @@ The $\log_{10}$ transformation highlights a Ministry of Health classification er
 
 \pagebreak
 
-### Reported Hospitalizations `r as.Date(min(x$Date))` to `r as.Date(max(x$Date))`
+### Reported Hospitalizations `r as.Date(min(cases$Date))` to `r as.Date(max(cases$Date))`
 
 The metric provided was not stratified by any age categories.
 
 ```{r plot_hospitalization, echo = FALSE, fig.pos = "!h", fig.cap = "Hospitalization Cases versus Time by Vaccination Status"}
-# plotObj <- xyplot(Hospitalization ~ Date, data=x,  main=list("MoH Reported Hospitalization", cex=0.9),
+# plotObj <- xyplot(Hospitalization ~ Date, data=cases,  main=list("MoH Reported Hospitalization", cex=0.9),
 #                   groups=Status, type="b",key=myKey, pch=16, cex=0.3, aspect = 1)
 
-plotObj <- xyplot(Hospitalization ~ Date, data=x,  main=list("MoH Reported Hospitalization", cex=0.9),
+plotObj <- xyplot(Hospitalization ~ Date, data=cases,  main=list("MoH Reported Hospitalization", cex=0.9),
 				  groups=Status, type="b", key=myKey, col = my_colours,
 				  panel=function(x,y, ...){
-  panel.superpose(x,y, pch=16, cex=0.3, ...)
+  panel.superpose(x, y, pch=16, cex=0.3, ...)
   panel.abline(v=as.POSIXct("2022-06-02 0:00"), lty=3, col="black", lwd=0.4)
   
   panel.text(as.POSIXct("2022-06-02 0:00")-86400*12, 12000, "2 June 2022", srt=90, cex=0.6)
@@ -366,11 +372,11 @@ knitr::kable(moH_wide |>
 There are also so few cases in the single dose category that a $\log_{10}$ transformation is required. 
 
 ```{r plot_logHospitalization, echo = FALSE, fig.pos = "!h", fig.cap = "log10(Hospitalization Cases) versus Time by Vaccination Status"}
-plotObj2 <- xyplot(log10(Hospitalization) ~ Date, data=x, groups=Status,
+plotObj2 <- xyplot(log10(Hospitalization) ~ Date, data=cases, groups=Status,
 				   main=list("MoH Reported Hospitalization", cex=0.9),
 				   scales = list(y = list(at=1:10, label=sprintf("%0.f", 10^(1:10)))),
                   type="b", key=myKey, col = my_colours, panel=function(x,y, ...){
-  panel.superpose(x,y, pch=16, cex=0.3, ...)
+  panel.superpose(x, y, pch=16, cex=0.3, ...)
   panel.abline(v=as.POSIXct("2022-06-02 0:00"), lty=3, col="black", lwd=0.4)
   
   panel.text(as.POSIXct("2022-06-02 0:00")-86400*12, log10(13500), "2 June 2022", srt=90, cex=0.6)
@@ -387,15 +393,15 @@ graphics.off()
 
 \pagebreak
 
-### Reported ICU `r as.Date(min(x$Date))` to `r as.Date(max(x$Date))`
+### Reported ICU `r as.Date(min(cases$Date))` to `r as.Date(max(cases$Date))`
 
 The metric provided was not stratified by any age categories.
 
 ```{r plot_ICU, echo = FALSE, fig.pos = "!h", fig.cap = "ICU Cases versus Time by Vaccination Status"}
-plotObj <- xyplot(ICU ~ Date, data=x,  main=list("MoH Reported ICU", cex=0.9),
+plotObj <- xyplot(ICU ~ Date, data=cases,  main=list("MoH Reported ICU", cex=0.9),
                   groups=Status, type="b", key=myKey, col = my_colours,
 				  panel=function(x,y, ...){
-  panel.superpose(x,y, pch=16, cex=0.3, ...)
+  panel.superpose(x, y, pch=16, cex=0.3, ...)
 })
 print(plotObj)
 
@@ -409,10 +415,10 @@ graphics.off()
 There are also so few cases in the single dose category that a $\log_{10}$ transformation is required. 
 
 ```{r plot_logICU, echo = FALSE, fig.pos = "!h", fig.cap = "log10(ICU Cases) versus Time by Vaccination Status"}
-plotObj2 <- xyplot(log10(ICU) ~ Date, data=x, groups=Status, main=list("MoH Reported ICU", cex=0.9),
+plotObj2 <- xyplot(log10(ICU) ~ Date, data=cases, groups=Status, main=list("MoH Reported ICU", cex=0.9),
                   scales = list(y = list(at=1:10, label=sprintf("%0.f", 10^(1:10)))),
                   type="b", key=myKey, col = my_colours, panel=function(x,y, ...){
-  panel.superpose(x,y, pch=16, cex=0.3, ...)
+  panel.superpose(x, y, pch=16, cex=0.3, ...)
   # panel.abline(v=as.POSIXct("2022-05-3 0:00"), lty=3, col="black", lwd=0.4)
   # panel.text(as.POSIXct("2022-07-11 0:00")+86400*15, log10(1000), "Classification errors", srt = 90, col="red", cex=0.8)
 })
@@ -425,24 +431,24 @@ graphics.off()
 
 ```{r, echo = FALSE, eval = FALSE}
 ## The classification data error in `Cases` is the following records
-x_wide_cases$Total <- rowSums(x_wide_cases[,-1], na.rm=TRUE)
-knitr::kable(x_wide_cases[140:152,])
+cases_wide$Total <- rowSums(cases_wide[,-1], na.rm=TRUE)
+knitr::kable(cases_wide[140:152,])
 ```
 
-\pagebreak
 
 ## Ministry of Health reported Deaths
 
-The data was recorded as a cumulative tally by vaccination status and (partially) stratified by age over time in wide format;
+The data were recorded as cumulative tallies, categorised by vaccination status and (partially) stratified by age over time. One advantage of using cumulative data is that discrepancies or inconsistencies in the recorded figures may be identified and corrected by Ministry of Health staff as records are subsequently reviewed and updated. The data was collected in the following format:
 
 ```{r load_deaths, echo = FALSE}
-deaths <- read_xlsx("covid_healthdata.xlsx", sheet = "Deaths", col_types=c("date","text","numeric", "numeric", "numeric", "numeric", "text", "numeric", "numeric", "numeric", "numeric"), na = c("*", "NA"))
+deaths_raw <- read_xlsx("covid_healthdata.xlsx", sheet = "Deaths", col_types=c("date","text","numeric", "numeric", "numeric", "numeric", "text", "numeric", "numeric", "numeric", "numeric"), na = c("*", "NA"))
 
 ## Remove column name spaces
-names(deaths) <- gsub(" ", "_", names(deaths))
+names(deaths_raw) <- gsub(" ", "_", names(deaths_raw))
 
 ## Remove the Total column
-deaths <- subset(deaths, subset=Age_group != "Total", select = c(Date, Age_group, Not_fully_vaccinated, Fully_vaccinated, Received_booster))
+deaths <- subset(deaths_raw, subset=! Age_group %in% "Total", select = c(Date, Age_group, Not_fully_vaccinated, Fully_vaccinated, Received_booster))
+deaths_total <- subset(deaths_raw, subset=Age_group %in% "Total", select = c(Date, Age_group, Not_fully_vaccinated, Fully_vaccinated, Received_booster))
 
 ## Narrow format
 deaths_gather <- gather(deaths, Status, Deaths, -Date, -Age_group)
@@ -452,7 +458,13 @@ deaths_gather$Status <- factor(deaths_gather$Status, levels=unique(deaths_gather
 knitr::kable(head(deaths, n=5))
 ```
 
-This was converted into narrow format, and the following explanatory variables were reparametrised:
+\pagebreak
+
+### Reported Deaths by Vaccination Status from 2022-02-11 to 2024-02-18 
+
+This metric was partially stratified by age category. Essentially, it represents a tally of deaths among people who had contracted COVID-19 within the preceding 28 days. As the vaccination programme initially prioritised older people before progressively extending eligibility to younger age groups, vaccination status is correlated with age. Consequently, age is a potential confounding variable when comparing mortality between vaccination groups. The potential for Simpson’s paradox must be considered when interpreting the metrics.
+
+The vaccination status category explanatory variables were reparametrised for plotting:
 
 | From                 | To         |
 |:---------------------|-----------:|
@@ -460,35 +472,10 @@ This was converted into narrow format, and the following explanatory variables w
 | Fully_vaccinated     | $\quad2\; \mbox{doses}$ |
 | Received_booster     | $\ge3\;\mbox{doses}$ |
 
-### Vaccination vs Unvaccinated
-
-Insufficient information was provided by the Ministry of Health to estimate relative risks between vaccinated and unvaccinated populations,
-however the screenshot from 26 November 2023 provides an approximate snapshot at that date of the proportion of the New Zealand population categorized by vaccine status published by the Ministry of Health.
-
-```{r, echo=FALSE, out.width=400, fig.pos = "!h", fig.cap="Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM"}
-knitr::include_graphics("Screen Shot 2023-11-26 at 9.16.30 AM.png")
-```
-
-\pagebreak
-
-It can be inferred from this Figure 8 that on 26 November 2023 the Vaccination categories in the New Zealand population were:
-
-1. People with $\le 1\; \mbox{dose}$ equals 18\%;
-
-2. Vaccinated people with $2 \; \mbox{doses}$ equals $82 - 53 = 29$\%;
-
-3. Vaccinated people with $\ge 3\; \mbox{doses}$ equals 53\%.
-
-
-### Reported Deaths by Vaccination Status from 2022-02-11 to 2024-02-18 
-
-This metric was partially stratified by age category. Essentially, it is a tally of deaths among people who had contracted COVID-19 within the preceding 28 days. As vaccination targeted the elderly first, then successive lower age groups, there will be confounding by age with vaccination status, and Simpsons paradox applies.
-
-This metric was partially stratified by age category. Essentially, it represents a tally of deaths among people who had contracted COVID-19 within the preceding 28 days. As the vaccination programme initially prioritised older people before progressively extending eligibility to younger age groups, vaccination status is correlated with age. Consequently, age is a potential confounding variable when comparing mortality between vaccination groups. The potential for Simpson’s paradox must be considered when interpreting the metrics.
-
 Visualising the cumulative COVID-19 Deaths over time conditioned on Vaccination Status, and Age category.
 
-```{r plot_deaths, echo = FALSE, fig.height = 7, fig.width = 7, fig.pos = "!h", fig.cap = "Deaths versus Time conditioned by Vaccination Status and a legend for Age categories"}
+
+```{r plot_deaths, echo = FALSE, fig.height = 7, fig.width = 7, fig.pos = "!h", fig.cap = "Deaths versus Time conditioned by Vaccination Status and a legend for Age categories. The cumulative trend suggests that deaths due to COVID-19 were significantly higher in the vaccinated group with __>=3 doses__ across all age groups."}
 myKey <- simpleKey(text=sort(unique(deaths$Age_group)), columns=5, space = "top")
  
 plotObj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2, y=0.2), groups=Age_group,
@@ -496,9 +483,9 @@ plotObj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2
 				  ylab = "COVID-19 Deaths within 28 days",
 				  main="Ministry of Health Reported Deaths by Vaccination status",
 				  layout=c(3, 1),  
-                  panel=function(x,y, ...){
+                  panel=function(x, y, ...){
                     panel.grid(...)
-                    panel.superpose(x,y, col = my_colours, ...)
+                    panel.superpose(x, y, col = my_colours, ...)
                     panel.abline(v=as.POSIXct("2022-08-26", tz="UTC"), lty=3)
                     panel.text(x=as.POSIXct("2022-08-26", tz="UTC")-15*24*3600, y=775, "MoH COVID-19 Mortality Report", srt=90, adj=0, cex = 0.6) #  ")
                   })
@@ -512,9 +499,49 @@ print(plotObj)
 graphics.off()
 ```
 
-The cumulative trend suggests that deaths due to COVID-19 were significantly higher in the vaccinated group with $\ge 3\; \mbox{doses}$ across all age groups.
+\pagebreak 
+
+### Vaccination vs Unvaccinated
+
+Insufficient information was provided by the Ministry of Health to estimate relative risks between vaccinated and unvaccinated populations,
+however the screenshot from 26 November 2023 provides an approximate snapshot at that date of the proportion of the New Zealand population categorized by vaccine status published by the Ministry of Health.
+
+```{r, echo=FALSE, out.width=400, fig.pos = "!h", fig.cap="Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM"}
+knitr::include_graphics("Screen Shot 2023-11-26 at 9.16.30 AM.png")
+```
+
+It can be inferred from Figure 9 that on 26 November 2023 the Vaccination categories in the New Zealand population were:
+
+1. People with $\le 1\; \mbox{dose}$ equals 18\%;
+
+2. Vaccinated people with $2 \; \mbox{doses}$ equals $82 - 53 = 29$\%;
+
+3. Vaccinated people with $\ge 3\; \mbox{doses}$ equals 53\%.
+
+
+On the 26 November 2023 when the screenshot capture of the Total Population Vaccinated was taken, the deaths by vaccination status partially stratified by age category was:
+
+```{r deaths_2023_11_26, echo = FALSE}
+knitr::kable(deaths[grep("2023-11-26", deaths$Date), ])
+```
 
 \pagebreak
+
+The total deaths by vaccination status was:
+
+```{r sumdeaths_2023_11_26, echo = FALSE}
+knitr::kable(deaths_total[grep("2023-11-26", deaths_total$Date), ])
+```
+
+If the group having received $\ge 3\; \mbox{doses}$ vaccine doses represented 53% of the population on 26 November 2023, a simple population proportional comparison might lead us to expect that this group would account for approximately 53% of deaths. However, the actual death figure is 75%. This apparent disparity warrants further investigation, particularly because the $\ge 3\; \mbox{doses}$ group may be disproportionately represented by older people, who generally have a higher underlying risk of death. Consequently, age is a potential confounding variable, and the aggregate figures may exhibit Simpson’s paradox.
+
+
+\begin{equation}
+\begin{aligned}
+100 \times \frac{3841}{\left( 596 + 663 + 3841\right)} = 75.3\%
+\end{aligned}
+\end{equation}
+
 
 ## Summary
 
@@ -531,18 +558,19 @@ Pages 27 and 28 in the Appendix of this report highlight that the driving variab
 
 It should also be noted that the age weightings used to estimate fully adjusted risk are not provided in the report.
 
-The dashboard data presented above raise questions about why the regression analyses published by the Ministry of Health simplified the vaccination status categories, effectively excluding the $\ge 3\; \mbox{doses}$ category from the regression models.
+The dashboard data presented above raise questions about why the regression analyses in [COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND September 2022](https://www.health.govt.nz/system/files/2022-09/covid-19_mortality_in_aotearoa_inequities_in_risk_september_2022_29_sept.v2.pdf) published by the Ministry of Health where they simplified the vaccination status categories, effectively excluding the $\ge 3\; \mbox{doses}$ category from the regression models.
 
 A further question is why, in light of the evidence provided and data available to the Ministry of Health, regression models were not subsequently updated and reported for 2023, 2024 and 2025 using the same statistical methodology. Applying a consistent methodology across these years would have allowed the results to be compared over time.
 
 As with Statistics New Zealand’s advice to the Ministry of Health to use the HSU 2021 dataset, independent statistical analysis of publicly released data is recommended to assess the methodology, statistical rigor, and validate the reported findings to evaluate the robustness of conclusions drawn from the Ministry of Healths underlying proprietary collected datasets during COVID-19.
 
-This evidence from Ministry of Health dashboard data provided to the public has significant implications on motivation for the remit of the _[Royal Commission of Inquiry into COVID-19 Lessons Learned (Phase One and Phase Two)](https://www.covid19lessons.royalcommission.nz)_
+This evidence, drawn from the Ministry of Health’s publicly available dashboard data, raises significant questions about the rationale for excluding comparisons of health outcomes between vaccinated and unvaccinated populations from the remit of the _[Royal Commission of Inquiry into COVID-19 Lessons Learned (Phase One and Phase Two)](https://www.covid19lessons.royalcommission.nz)_
+
 
 ```{r scratchpad, echo = FALSE, eval = FALSE}
 ## Find when dates changed from daily to weekly reporting
 # 1. Obtain unique vector of dates
-dates <- as.Date(unique(x$Date))
+dates <- as.Date(unique(cases$Date))
 
 # 2. Calculate the differences between consecutive dates
 date_diffs <- as.numeric(diff(dates))
@@ -561,4 +589,19 @@ result <- data.frame(
 )
 
 print(result)
+
+
+#
+## Sanity checks
+#
+
+## Sanity check the cases totals
+expect_equal(as.integer(tapply(cases$Cases, cases$Date, sum)), cases_total$Cases)
+
+## Sanity check the deaths totals - a few recording errors
+table(as.integer(tapply(deaths$Not_fully_vaccinated, deaths$Date, sum)) - deaths_total$Not_fully_vaccinated)
+table(as.integer(tapply(deaths$Not_fully_vaccinated, deaths$Date, sum)) - deaths_total$Not_fully_vaccinated)
+table(as.integer(tapply(deaths$Fully_vaccinated, deaths$Date, sum)) - deaths_total$Fully_vaccinated)
+table(as.integer(tapply(deaths$Received_booster, deaths$Date, sum)) - deaths_total$Received_booster)
+
 ```

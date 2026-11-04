@@ -59,15 +59,17 @@ Zealand population, this introduced a significant bias in the number of
 unvaccinated people in New Zealand. This discrepancy arose from its use
 of the HSU2020 dataset, which introduced bias into metrics used to
 estimate relative risks between vaccinated and unvaccinated populations.
+The following announcement on youtube describes the issue understating
+its significance to the estimated number of unvaccinated people.
 
 <https://www.youtube.com/watch?v=tL06sCjQHxo&t=364s>
 
 The underlying issue is that vaccination records are expected to be
 reasonably accurate as individuals receive vaccinations and are recorded
 in relevant databases. However, the estimated total population was
-underestimated. By switching to the updated HSU 2021 database, the
-residual population classified as unvaccinated increased by an
-additional 233,000 people. Consequently, the estimated size of the
+significantly underestimated. By switching to the updated HSU 2021
+database, the residual population classified as unvaccinated increased
+by an additional 233,000 people. Consequently, the estimated size of the
 unvaccinated population is substantially larger than had been used in
 any publication prior to 4 August 2022.
 
@@ -81,7 +83,7 @@ $387/154 = 2.51$ times.
 
 The following screen shot was taken on 8 May 2022 from
 https://covid19map.co.nz/cases. It illustrates the underestimate in the
-total population using a figure of 153,252 for the unvaccinated
+total population using an estimate of 153,252 for the unvaccinated
 population.
 
 <div class="figure">
@@ -104,8 +106,12 @@ person having a booster.*
 
 ## Ministry of Health Cases
 
-The data was recorded as a cumulative tally by vaccination status over
-time in the form;
+The data were recorded as cumulative tallies, categorised by vaccination
+status and updated over time. One advantage of using cumulative data is
+that discrepancies or inconsistencies in the recorded figures may be
+identified and corrected by Ministry of Health staff as records are
+subsequently reviewed and updated. The data was collected in the
+following format:
 
 | Date       | Status       | Cases | Hospitalization | ICU |
 |:-----------|:-------------|------:|----------------:|----:|
@@ -194,8 +200,12 @@ Vaccination Status</figcaption>
 
 ## Ministry of Health reported Deaths
 
-The data was recorded as a cumulative tally by vaccination status and
-(partially) stratified by age over time in wide format;
+The data were recorded as cumulative tallies, categorised by vaccination
+status and (partially) stratified by age over time. One advantage of
+using cumulative data is that discrepancies or inconsistencies in the
+recorded figures may be identified and corrected by Ministry of Health
+staff as records are subsequently reviewed and updated. The data was
+collected in the following format:
 
 | Date       | Age_group | Not_fully_vaccinated | Fully_vaccinated | Received_booster |
 |:-----------|:----------|---------------------:|-----------------:|-----------------:|
@@ -205,14 +215,38 @@ The data was recorded as a cumulative tally by vaccination status and
 | 2022-03-15 | 80 to 89  |                   15 |               14 |                9 |
 | 2022-03-15 | 90+       |                   10 |                9 |                5 |
 
-This was converted into narrow format, and the following explanatory
-variables were reparametrised:
+### Reported Deaths by Vaccination Status from 2022-02-11 to 2024-02-18
+
+This metric was partially stratified by age category. Essentially, it
+represents a tally of deaths among people who had contracted COVID-19
+within the preceding 28 days. As the vaccination programme initially
+prioritised older people before progressively extending eligibility to
+younger age groups, vaccination status is correlated with age.
+Consequently, age is a potential confounding variable when comparing
+mortality between vaccination groups. The potential for Simpson’s
+paradox must be considered when interpreting the metrics.
+
+The vaccination status category explanatory variables were
+reparametrised for plotting:
 
 | From                 |                      To |
 |:---------------------|------------------------:|
 | Not_fully_vaccinated | $\le1\;\mbox{dose}\:\:$ |
 | Fully_vaccinated     | $\quad2\; \mbox{doses}$ |
 | Received_booster     |    $\ge3\;\mbox{doses}$ |
+
+Visualising the cumulative COVID-19 Deaths over time conditioned on
+Vaccination Status, and Age category.
+
+<figure>
+<img src="report_files/figure-gfm/plot_deaths-1.png"
+alt="Deaths versus Time conditioned by Vaccination Status and a legend for Age categories. The cumulative trend suggests that deaths due to COVID-19 were significantly higher in the vaccinated group with &gt;=3 doses across all age groups." />
+<figcaption aria-hidden="true">Deaths versus Time conditioned by
+Vaccination Status and a legend for Age categories. The cumulative trend
+suggests that deaths due to COVID-19 were significantly higher in the
+vaccinated group with <strong>&gt;=3 doses</strong> across all age
+groups.</figcaption>
+</figure>
 
 ### Vaccination vs Unvaccinated
 
@@ -232,7 +266,7 @@ Screenshot from RNZ dashboard on 2023-11-26 at 9.16.30 AM
 
 </div>
 
-It can be inferred from this Figure 8 that on 26 November 2023 the
+It can be inferred from Figure 9 that on 26 November 2023 the
 Vaccination categories in the New Zealand population were:
 
 1.  People with $\le 1\; \mbox{dose}$ equals 18%;
@@ -241,36 +275,34 @@ Vaccination categories in the New Zealand population were:
 
 3.  Vaccinated people with $\ge 3\; \mbox{doses}$ equals 53%.
 
-### Reported Deaths by Vaccination Status from 2022-02-11 to 2024-02-18
+On the 26 November 2023 when the screenshot capture of the Total
+Population Vaccinated was taken, the deaths by vaccination status
+partially stratified by age category was:
 
-This metric was partially stratified by age category. Essentially, it is
-a tally of deaths among people who had contracted COVID-19 within the
-preceding 28 days. As vaccination targeted the elderly first, then
-successive lower age groups, there will be confounding by age with
-vaccination status, and Simpsons paradox applies.
+| Date       | Age_group | Not_fully_vaccinated | Fully_vaccinated | Received_booster |
+|:-----------|:----------|---------------------:|-----------------:|-----------------:|
+| 2023-11-26 | 0 to 59   |                  108 |              134 |              190 |
+| 2023-11-26 | 60 to 69  |                   65 |               93 |              295 |
+| 2023-11-26 | 70 to 79  |                  121 |              134 |              794 |
+| 2023-11-26 | 80 to 89  |                  173 |              183 |             1483 |
+| 2023-11-26 | 90+       |                  129 |              119 |             1079 |
 
-This metric was partially stratified by age category. Essentially, it
-represents a tally of deaths among people who had contracted COVID-19
-within the preceding 28 days. As the vaccination programme initially
-prioritised older people before progressively extending eligibility to
-younger age groups, vaccination status is correlated with age.
-Consequently, age is a potential confounding variable when comparing
-mortality between vaccination groups. The potential for Simpson’s
-paradox must be considered when interpreting the metrics.
+The total deaths by vaccination status was:
 
-Visualising the cumulative COVID-19 Deaths over time conditioned on
-Vaccination Status, and Age category.
+| Date       | Age_group | Not_fully_vaccinated | Fully_vaccinated | Received_booster |
+|:-----------|:----------|---------------------:|-----------------:|-----------------:|
+| 2023-11-26 | Total     |                  596 |              663 |             3841 |
 
-<figure>
-<img src="report_files/figure-gfm/plot_deaths-1.png"
-alt="Deaths versus Time conditioned by Vaccination Status and a legend for Age categories" />
-<figcaption aria-hidden="true">Deaths versus Time conditioned by
-Vaccination Status and a legend for Age categories</figcaption>
-</figure>
-
-The cumulative trend suggests that deaths due to COVID-19 were
-significantly higher in the vaccinated group with $\ge 3\; \mbox{doses}$
-across all age groups.
+If the group having received $\ge 3\; \mbox{doses}$ vaccine doses
+represented 53% of the population on 26 November 2023, a simple
+population proportional comparison might lead us to expect that this
+group would account for approximately 53% of deaths. However, the actual
+death figure is 75%. This apparent disparity warrants further
+investigation, particularly because the $\ge 3\; \mbox{doses}$ group may
+be disproportionately represented by older people, who generally have a
+higher underlying risk of death. Consequently, age is a potential
+confounding variable, and the aggregate figures may exhibit Simpson’s
+paradox.
 
 ## Summary
 
@@ -291,7 +323,10 @@ It should also be noted that the age weightings used to estimate fully
 adjusted risk are not provided in the report.
 
 The dashboard data presented above raise questions about why the
-regression analyses published by the Ministry of Health simplified the
+regression analyses in [COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND
+September
+2022](https://www.health.govt.nz/system/files/2022-09/covid-19_mortality_in_aotearoa_inequities_in_risk_september_2022_29_sept.v2.pdf)
+published by the Ministry of Health where they simplified the
 vaccination status categories, effectively excluding the
 $\ge 3\; \mbox{doses}$ category from the regression models.
 
@@ -308,7 +343,9 @@ rigor, and validate the reported findings to evaluate the robustness of
 conclusions drawn from the Ministry of Healths underlying proprietary
 collected datasets during COVID-19.
 
-This evidence from Ministry of Health dashboard data provided to the
-public has significant implications on motivation for the remit of the
-*[Royal Commission of Inquiry into COVID-19 Lessons Learned (Phase One
-and Phase Two)](https://www.covid19lessons.royalcommission.nz)*
+This evidence, drawn from the Ministry of Health’s publicly available
+dashboard data, raises significant questions about the rationale for
+excluding comparisons of health outcomes between vaccinated and
+unvaccinated populations from the remit of the *[Royal Commission of
+Inquiry into COVID-19 Lessons Learned (Phase One and Phase
+Two)](https://www.covid19lessons.royalcommission.nz)*
