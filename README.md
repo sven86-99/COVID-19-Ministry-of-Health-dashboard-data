@@ -40,8 +40,7 @@ _[Royal Commission of Inquiry into COVID-19 Lessons Learned (Phase One and Phase
 
 ## Deaths by Vaccination Status
 
-![COVID-19 Deaths by Vaccination Status in New Zealand](img/deaths.svg")
-
+<img src="report_files/figure-gfm/plot_deaths-1.png" />
 
 ## Contents
 
