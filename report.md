@@ -21,11 +21,11 @@ Metrics for Cases, Hospitalization, and Deaths of people in New Zealand
 within 28 days of being reported as a COVID-19 case were stratified on
 vaccination type and partially by age. This information was collated
 from the Ministry of Health website and entered into an excel
-spreadsheet `covid_healthdata.xlsx`.
-
-The authenticity of the dataset made available to the public in
-`covid_healthdata.xlsx` can be verified from snapshots over time still
-available in the wayback machine:
+spreadsheet
+[`covid_healthdata.xlsx`](https://github.com/sven86-99/COVID-19-Ministry-of-Health-dashboard-data/blob/main/covid_healthdata.xlsx)
+available in the GitHub repository. The authenticity of the dataset made
+available to the public in `covid_healthdata.xlsx` can be verified from
+snapshots over time still available in the wayback machine.
 
 - <https://web.archive.org/web/20260000000000*/https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics>
 
@@ -45,21 +45,23 @@ represents only a subset of the metrics collected and maintained within
 its proprietary databases.
 
 The publicly disclosed data lack sufficient age group detail and concise
-categorisation of vaccination status to support any comprehensive
-relative risk analysis. For example, the publication of Deaths in age
-categories (0–59, 60–69, 70-79, 80-89, 90+ years) may have been
-restricted because a small number of deaths within lower age categories
-could increase the likelihood of identifying individuals and potentially
-compromising privacy.
+categorisation of vaccination status to support reliable population
+standardisation (for example, rates per 100,000 people) or comprehensive
+relative-risk analysis. The publication of Deaths in age categories
+(0–59, 60–69, 70-79, 80-89, 90+ years) may have been restricted because
+a small number of deaths within lower age categories could increase the
+likelihood of identifying individuals and potentially compromising
+privacy.
 
 ## Underestimation of the Population
 
 Prior to 4 August 2022, the Ministry of Health underestimated the New
 Zealand population, this introduced a significant bias in the number of
 unvaccinated people in New Zealand. This discrepancy arose from its use
-of the HSU2020 dataset, which introduced bias into metrics used to
-estimate relative risks between vaccinated and unvaccinated populations.
-The following announcement on youtube describes the issue understating
+of the HSU2020 dataset before the HSU2021 dataset was available. This
+introduced bias into metrics used to estimate relative risks between
+vaccinated and unvaccinated populations. The following public
+announcement by the Ministry of Health describes the issue understating
 its significance to the estimated number of unvaccinated people.
 
 <https://www.youtube.com/watch?v=tL06sCjQHxo&t=364s>
@@ -110,8 +112,22 @@ The data were recorded as cumulative tallies, categorised by vaccination
 status and updated over time. One advantage of using cumulative data is
 that discrepancies or inconsistencies in the recorded figures may be
 identified and corrected by Ministry of Health staff as records are
-subsequently reviewed and updated. The data was collected in the
-following format:
+subsequently reviewed and updated. The source of the data came directly
+from the Ministry of Health dashboard provided to the public.
+
+<div class="figure">
+
+<img src="Screen Shot 2026-11-04 at 6.35.45 PM.png" alt="Snapshot example of https://web.archive.org/web/20260000000000*/https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics as at 24 February 2024" width="470" />
+<p class="caption">
+
+Snapshot example of
+<https://web.archive.org/web/20260000000000*/https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics>
+as at 24 February 2024
+</p>
+
+</div>
+
+The data was collected in the following format:
 
 | Date       | Status       | Cases | Hospitalization | ICU |
 |:-----------|:-------------|------:|----------------:|----:|
@@ -122,8 +138,18 @@ following format:
 | 2022-02-13 | Unvaccinated |  4498 |             417 |  NA |
 | 2022-02-13 | Single vax   |  2361 |             121 |  NA |
 
-Any value which is less than the previous daily/weekly total is a
-reporting error by the Ministry of Health.
+Any decrease in a reported value relative to the preceding daily or
+weekly figure indicates a discrepancy in the published data. Such
+discrepancies may subsequently be corrected as the Ministry reviews and
+updates its records.
+
+It should also be noted that the unvaccinated category is subject to a
+small degree of bias because cumulative data include a number of cases
+and hospitalisations recorded before vaccines became available. For an
+objective comparison, counts for all vaccination status categories
+should ideally be standardised to the same initial observation period.
+However, this standardisation has not been applied to the observational
+data presented here.
 
 ### Reported Cases 2022-02-11 to 2024-02-18
 
@@ -137,10 +163,9 @@ Status</figcaption>
 </figure>
 
 There is an acceleration of reported COVID-19 cases in the `Triple Vax`
-category, the crossover point is around 3 May 2022.
-
-There are also so few cases in the single dose category that a
-$\log_{10}$ transformation is required.
+category, the crossover point is around 3 May 2022. There were so few
+cases in the single dose category that a $\log_{10}$ transformation was
+also used.
 
 <figure>
 <img src="report_files/figure-gfm/plot_logcases-1.png"
@@ -149,8 +174,8 @@ alt="log10(Cases) versus Time by Vaccination Status" />
 Status</figcaption>
 </figure>
 
-The $\log_{10}$ transformation highlights a Ministry of Health
-classification error in data reporting.
+This highlights a Ministry of Health classification error in data
+reporting which is subsequently corrected.
 
 ### Reported Hospitalizations 2022-02-11 to 2024-02-18
 
@@ -176,6 +201,9 @@ alt="log10(Hospitalization Cases) versus Time by Vaccination Status" />
 <figcaption aria-hidden="true">log10(Hospitalization Cases) versus Time
 by Vaccination Status</figcaption>
 </figure>
+
+This highlights a Ministry of Health reporting error which is
+subsequently corrected.
 
 ### Reported ICU 2022-02-11 to 2024-02-18
 
@@ -204,8 +232,24 @@ The data were recorded as cumulative tallies, categorised by vaccination
 status and (partially) stratified by age over time. One advantage of
 using cumulative data is that discrepancies or inconsistencies in the
 recorded figures may be identified and corrected by Ministry of Health
-staff as records are subsequently reviewed and updated. The data was
-collected in the following format:
+staff as records are subsequently reviewed and updated.
+
+The source of the data came directly from the Ministry of Health
+dashboard provided to the public.
+
+<div class="figure">
+
+<img src="Screen Shot 2026-11-04 at 6.36.28 PM.png" alt="Snapshot example of https://web.archive.org/web/20260000000000*/https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics as at 24 February 2024" width="470" />
+<p class="caption">
+
+Snapshot example of
+<https://web.archive.org/web/20260000000000*/https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics>
+as at 24 February 2024
+</p>
+
+</div>
+
+The data was collected in the following format:
 
 | Date       | Age_group | Not_fully_vaccinated | Fully_vaccinated | Received_booster |
 |:-----------|:----------|---------------------:|-----------------:|-----------------:|
@@ -214,6 +258,19 @@ collected in the following format:
 | 2022-03-15 | 70 to 79  |                   14 |                4 |                7 |
 | 2022-03-15 | 80 to 89  |                   15 |               14 |                9 |
 | 2022-03-15 | 90+       |                   10 |                9 |                5 |
+
+Any decrease in a reported value relative to the preceding daily or
+weekly figure indicates a discrepancy in the published data. Such
+discrepancies may subsequently be corrected as the Ministry reviews and
+updates its records.
+
+It should also be noted that the unvaccinated category is subject to a
+small degree of bias because cumulative data include a number of deaths
+recorded before vaccines became available. For an objective comparison,
+counts for all vaccination status categories should ideally be
+standardised to the same initial observation period. However, this
+standardisation has not been applied to the observational data presented
+here.
 
 ### Reported Deaths by Vaccination Status from 2022-02-11 to 2024-02-18
 
@@ -229,11 +286,11 @@ paradox must be considered when interpreting the metrics.
 The vaccination status category explanatory variables were
 reparametrised for plotting:
 
-| From                 |                      To |
-|:---------------------|------------------------:|
+| From                 |           To            |
+|:---------------------|:-----------------------:|
 | Not_fully_vaccinated | $\le1\;\mbox{dose}\:\:$ |
 | Fully_vaccinated     | $\quad2\; \mbox{doses}$ |
-| Received_booster     |    $\ge3\;\mbox{doses}$ |
+| Received_booster     |  $\ge3\;\mbox{doses}$   |
 
 Visualising the cumulative COVID-19 Deaths over time conditioned on
 Vaccination Status, and Age category.
@@ -287,24 +344,25 @@ partially stratified by age category was:
 | 2023-11-26 | 80 to 89  |                  173 |              183 |             1483 |
 | 2023-11-26 | 90+       |                  129 |              119 |             1079 |
 
-The total deaths by vaccination status was:
+The total deaths by vaccination status were:
 
 | Date       | Age_group | Not_fully_vaccinated | Fully_vaccinated | Received_booster |
 |:-----------|:----------|---------------------:|-----------------:|-----------------:|
 | 2023-11-26 | Total     |                  596 |              663 |             3841 |
 
-If the group having received $\ge 3\; \mbox{doses}$ vaccine doses
-represented 53% of the population on 26 November 2023, a simple
-population proportional comparison might lead us to expect that this
-group would account for approximately 53% of deaths. However, the actual
-death figure is 75%. This apparent disparity warrants further
-investigation, particularly because the $\ge 3\; \mbox{doses}$ group may
-be disproportionately represented by older people, who generally have a
-higher underlying risk of death. Consequently, age is a potential
-confounding variable, and the aggregate figures may exhibit Simpson’s
-paradox.
+If the *Received_booster* group represented 53% of the population on 26
+November 2023, a naive null hypothesis of no association between booster
+vaccination status and mortality would suggest that this group would
+account for approximately 53% of deaths within 28 days of being reported
+as a COVID-19 case.
 
-## Summary
+However, the reported figure is 75%. This apparent disparity warrants
+further investigation, even factoring that the *Received_booster* group
+is likely to be disproportionately represented by older people, who
+generally have a higher underlying risk of death. Consequently, age is a
+confounding variable.
+
+## Discussion
 
 On 29 September 2022 the Ministry of Health published the report
 COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND September 2022.
