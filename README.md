@@ -2,6 +2,10 @@
 
 Dashboard data collected from Ministry of Health website between 11 February 2022 and 18 February 2024
 
+## Deaths by Vaccination Status
+
+<img src="report_files/figure-gfm/plot_deaths-1.png" />
+
 ## Summary
 
 This dataset provides information around Cases, Hospitalization, and Deaths by Vaccination Status
@@ -37,10 +41,6 @@ This evidence, drawn from the Ministry of Health’s publicly available dashboar
 raises significant questions about the rationale for excluding comparisons of health outcomes
 between vaccinated and unvaccinated populations from the remit of the 
 _[Royal Commission of Inquiry into COVID-19 Lessons Learned (Phase One and Phase Two)](https://www.covid19lessons.royalcommission.nz)_
-
-## Deaths by Vaccination Status
-
-<img src="report_files/figure-gfm/plot_deaths-1.png" />
 
 ## Contents
 
