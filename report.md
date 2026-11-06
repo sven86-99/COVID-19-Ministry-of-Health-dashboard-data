@@ -282,9 +282,9 @@ represents a tally of deaths among people who had contracted COVID-19
 within the preceding 28 days. As the vaccination programme initially
 prioritised older people before progressively extending eligibility to
 younger age groups, vaccination status is correlated with age.
-Consequently, age is a potential confounding variable when comparing
-mortality between vaccination groups. The potential for Simpson’s
-paradox must be considered when interpreting the metrics.
+Consequently, age is a confounding variable when comparing mortality
+between vaccination groups. The potential for Simpson’s paradox must be
+considered when interpreting the metrics.
 
 The vaccination status category explanatory variables were
 reparametrised for plotting:
