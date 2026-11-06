@@ -37,10 +37,10 @@ _case fatality risk_ per 100,000 people from 1 January to 26 August 2022 were:
 
 2. Any hospital identified co-morbidity.
 
-The dashboard data presented raise questions about why the regression analyses in
-[COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND September 2022](https://www.health.govt.nz/system/files/2022-09/covid-19_mortality_in_aotearoa_inequities_in_risk_september_2022_29_sept.v2.pdf)
-published by the Ministry of Health simplified the vaccination status categories,
-effectively excluding the _Received_booster_ group category from the regression models.
+The dashboard data presented above raise questions about why the regression analyses in the
+Ministry of Health report [COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND September 2022](https://www.health.govt.nz/system/files/2022-09/covid-19_mortality_in_aotearoa_inequities_in_risk_september_2022_29_sept.v2.pdf)
+simplified the vaccination status categories, effectively excluding the
+__≥3 doses__ category from the regression models.
 
 A further question is why, in light of the evidence provided and data available to the
 Ministry of Health, regression models were not subsequently updated and reported for
