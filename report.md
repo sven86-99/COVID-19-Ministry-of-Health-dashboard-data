@@ -1,6 +1,6 @@
 Ministry of Health COVID-19 metrics
 ================
-06-11-2026
+07-11-2026
 
 ## Introduction
 
@@ -415,11 +415,10 @@ It should also be noted that the age weightings used to estimate fully
 adjusted risk are not provided in the report.
 
 The dashboard data presented above raise questions about why the
-regression analyses in [COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND
-September
+regression analyses in the Ministry of Health report [COVID-19 MORTALITY
+IN AOTEAROA NEW ZEALAND September
 2022](https://www.health.govt.nz/system/files/2022-09/covid-19_mortality_in_aotearoa_inequities_in_risk_september_2022_29_sept.v2.pdf)
-published by the Ministry of Health where they simplified the
-vaccination status categories, effectively excluding the
+simplified the vaccination status categories, effectively excluding the
 $\ge 3\; \mbox{doses}$ category from the regression models.
 
 A further question is why, in light of the evidence provided and data
