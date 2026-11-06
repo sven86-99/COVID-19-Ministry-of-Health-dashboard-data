@@ -2,13 +2,27 @@
 
 Dashboard data collected from Ministry of Health website between 11 February 2022 and 18 February 2024
 
-## Deaths by Vaccination Status
+
+## Deaths by Vaccination Status in New Zealand
+
+The deaths dataset provided in [`covid_healthdata.xlsx`](https://github.com/sven86-99/COVID-19-Ministry-of-Health-dashboard-data/blob/main/covid_healthdata.xlsx) additionally contains explanatory variables for _Age group_, and _Vaccination Status_.
 
 <img src="report_files/figure-gfm/plot_deaths-1.png" />
 
+
+## Validation against New Zealand Royal Commission COVID-19 data
+
+The Royal Commission remit did not investigate vaccine effectiveness, as a consequence data
+was presented as a cumulative count of all COVID-19 Deaths within 28 days of being reported
+as a COVID-19 case.
+
+When aggregated across *Age group* and *Vaccination Status*, this dataset produces mortality figures that closely correspond to [__mortality data__](https://www.covid19lessons.royalcommission.nz/assets/Uploads/figure020-data-v2.csv)  published in Figure 20 of the NZ Royal Commission [__COVID-19 by the Numbers__](https://www.covid19lessons.royalcommission.nz/reports-lessons-learned/covid-19-by-the-numbers/figures-and-tables) report.
+
+<img src="report_files/figure-gfm/plot_rcdataset-1.png" />
+
 ## Summary
 
-This dataset provides information around Cases, Hospitalization, and Deaths by Vaccination Status
+This data collected in [`covid_healthdata.xlsx`](https://github.com/sven86-99/COVID-19-Ministry-of-Health-dashboard-data/blob/main/covid_healthdata.xlsx) provides information around Cases, Hospitalization, and Deaths by Vaccination Status
 which the Ministry of Health publicly disclosed on its website which is not in concordance with their
 own subsequent publications. On 29 September 2022 the Ministry of Health published the report
 `COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND September 2022`.
