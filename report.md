@@ -1,12 +1,13 @@
 Ministry of Health COVID-19 metrics
 ================
+06-11-2026
 
 ## Introduction
 
 The New Zealand Te Whatu Ora, Ministry of Health (MoH) reported COVID-19
 data metrics to the public on their website:
 
-- <https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics>
+**<https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics>**
 
 Data was recorded and updated:
 
@@ -24,10 +25,12 @@ from the Ministry of Health website and entered into an excel
 spreadsheet
 [`covid_healthdata.xlsx`](https://github.com/sven86-99/COVID-19-Ministry-of-Health-dashboard-data/blob/main/covid_healthdata.xlsx)
 available in the GitHub repository. The authenticity of the dataset made
-available to the public in `covid_healthdata.xlsx` can be verified from
-snapshots over time still available in the wayback machine.
+available to the public in
+[`covid_healthdata.xlsx`](https://github.com/sven86-99/COVID-19-Ministry-of-Health-dashboard-data/blob/main/covid_healthdata.xlsx)
+can be verified from snapshots over time still available in the wayback
+machine.
 
-- <https://web.archive.org/web/20260000000000*/https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics>
+**<https://web.archive.org/web/20260000000000*/https://www.health.govt.nz/covid-19-novel-coronavirus/covid-19-data-and-statistics/covid-19-case-demographics>**
 
 The random variables the Ministry of Health New Zealand reported to the
 public were;
@@ -64,7 +67,7 @@ vaccinated and unvaccinated populations. The following public
 announcement by the Ministry of Health describes the issue understating
 its significance to the estimated number of unvaccinated people.
 
-<https://www.youtube.com/watch?v=tL06sCjQHxo&t=364s>
+**<https://www.youtube.com/watch?v=tL06sCjQHxo&t=364s>**
 
 The underlying issue is that vaccination records are expected to be
 reasonably accurate as individuals receive vaccinations and are recorded
@@ -305,7 +308,38 @@ vaccinated group with <strong>&gt;=3 doses</strong> across all age
 groups.</figcaption>
 </figure>
 
-### Vaccination vs Unvaccinated
+### Validation against New Zealand Royal Commission COVID-19 data
+
+The Royal Commission remit did not investigate vaccine effectiveness, as
+a consequence data was presented as a cumulative count of all COVID-19
+Deaths within 28 days of being reported as a COVID-19 case.
+
+The deaths dataset provided in
+[`covid_healthdata.xlsx`](https://github.com/sven86-99/COVID-19-Ministry-of-Health-dashboard-data/blob/main/covid_healthdata.xlsx)
+additionally contains explanatory variables for *Age group*, and
+*Vaccination Status*.
+
+When aggregated across *Age group* and *Vaccination Status*, this
+dataset produces mortality figures that closely correspond to
+[**mortality
+data**](https://www.covid19lessons.royalcommission.nz/assets/Uploads/figure020-data-v2.csv)
+published in Figure 20 of the NZ Royal Commission [**COVID-19 by the
+Numbers**](https://www.covid19lessons.royalcommission.nz/reports-lessons-learned/covid-19-by-the-numbers/figures-and-tables)
+report.
+
+<figure>
+<img src="report_files/figure-gfm/plot_rcdataset-1.png"
+alt="New Zealand Royal Commission of Inquiry into COVID-19 Lessons Learned: Figure 20, showing the Commission’s published mortality data, overlaid with the death dataset in this repository aggregating over Status and Age" />
+<figcaption aria-hidden="true">New Zealand Royal Commission of Inquiry
+into COVID-19 Lessons Learned: <a
+href="https://www.covid19lessons.royalcommission.nz/reports-lessons-learned/covid-19-by-the-numbers/4-covid-19-arrives-in-new-zealand/4-4-mortality">Figure
+20</a>, showing the Commission’s published <a
+href="https://www.covid19lessons.royalcommission.nz/assets/Uploads/figure020-data-v2.csv">mortality
+data</a>, overlaid with the death dataset in this repository aggregating
+over Status and Age</figcaption>
+</figure>
+
+### Vaccination versus Unvaccinated
 
 Insufficient information was provided by the Ministry of Health to
 estimate relative risks between vaccinated and unvaccinated populations,
