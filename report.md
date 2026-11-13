@@ -1,6 +1,6 @@
 Ministry of Health COVID-19 metrics
 ================
-07-11-2026
+14-11-2026
 
 ## Introduction
 
@@ -58,46 +58,45 @@ privacy.
 
 ## Underestimation of the Population
 
-Prior to 4 August 2022, the Ministry of Health underestimated the New
-Zealand population, this introduced a significant bias in the number of
-unvaccinated people in New Zealand. This discrepancy arose from its use
-of the HSU2020 dataset before the HSU2021 dataset was available. This
-introduced bias into metrics used to estimate relative risks between
-vaccinated and unvaccinated populations. The following public
-announcement by the Ministry of Health describes the issue understating
-its significance to the estimated number of unvaccinated people.
+Prior to 4 August 2022, the Ministry of Health underestimated New
+Zealand’s population, resulting in a significant downward bias in the
+estimated number of unvaccinated people. This discrepancy arose because
+the Ministry of Health used the HSU 2020 dataset before the HSU 2021
+dataset became available. The resulting population estimate introduced
+bias into the metrics used to calculate relative risks between
+vaccinated and unvaccinated populations. The Ministry’s public
+announcement below acknowledges the issue but, in doing so, understates
+its significance for estimating the number of unvaccinated people in New
+Zealand.
 
 **<https://www.youtube.com/watch?v=tL06sCjQHxo&t=364s>**
 
-The underlying issue is that vaccination records are expected to be
-reasonably accurate as individuals receive vaccinations and are recorded
-in relevant databases. However, the estimated total population was
-significantly underestimated. By switching to the updated HSU 2021
-database, the residual population classified as unvaccinated increased
-by an additional 233,000 people. Consequently, the estimated size of the
-unvaccinated population is substantially larger than had been used in
-any publication prior to 4 August 2022.
+While vaccination records are expected to be reasonably accurate because
+individuals vaccinations were recorded in the relevant databases, the
+estimated total population was significantly understated. Following the
+transition to the updated HSU 2021 dataset, the residual population
+classified as unvaccinated increased by approximately 233,000 people,
+around 85% of whom were aged 12 or older. Consequently, the estimated
+unvaccinated population was substantially larger than the figure used in
+Ministry of Health publications prior to 4 August 2022.
 
 This has important implications for interpreting reported infection
 rates and other relative risk measures in any publication prior to 4
 August 2022 when comparing vaccinated to unvaccinated. For example, if
-prior to using the HSU 2021 database the unvaccinated population was
-estimated to be 153,000 people, this would increase to
-$154,000 + 233,000 = 387,000$ unvaccinated, a multiplier of
-$387/154 = 2.51$ times.
-
-The following screen shot was taken on 8 May 2022 from
-https://covid19map.co.nz/cases. It illustrates the underestimate in the
-total population using an estimate of 153,252 for the unvaccinated
-population.
+prior to using the HSU 2021 database the unvaccinated population over
+the age of 12 was estimated to be 153,252 people, this would increase to
+$153,252 + 233,000 \times 0.85 = 351302$ unvaccinated, a multiplier of
+$351302/153252 = 2.29$ times. The following screen shot was taken on 8
+May 2022 from https://covid19map.co.nz/cases.
 
 <div class="figure">
 
-<img src="Screen Shot 2022-05-08 at 3.10.02 PM.png" alt="Screenshot of https://covid19map.co.nz/cases on 2022-05-08 at 3.10.02 PM" width="470" />
+<img src="Screen Shot 2022-05-08 at 3.10.02 PM.png" alt="Screenshot of https://covid19map.co.nz/cases on 2022-05-08 at 3.10.02 PM illustrates the underestimate in the total population using an estimate of 153,252 for the unvaccinated population" width="470" />
 <p class="caption">
 
 Screenshot of <https://covid19map.co.nz/cases> on 2022-05-08 at 3.10.02
-PM
+PM illustrates the underestimate in the total population using an
+estimate of 153,252 for the unvaccinated population
 </p>
 
 </div>
