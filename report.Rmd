@@ -127,6 +127,9 @@ The data was collected in the following format:
 ```{r load_cases, echo=FALSE}
 cases_raw <- read_xlsx("covid_healthdata.xlsx", col_types=c("date","text","numeric", "numeric", "numeric", "text", "numeric", "numeric", "numeric"), sheet="Vaccination", na = c("", "NA"))
 
+## POSIXct to date
+cases_raw$Date <- as.Date(cases_raw$Date)
+
 ## Coerce to integers
 i <- vapply(cases_raw, is.numeric, logical(1)) &
      !vapply(cases_raw, inherits, logical(1), "Date") &
@@ -134,24 +137,49 @@ i <- vapply(cases_raw, is.numeric, logical(1)) &
 
 cases_raw[i] <- lapply(cases_raw[i], as.integer)
 
-## Remove the Total column
-cases       <- subset(cases_raw, ! Type %in% "Total")
-cases_total <- subset(cases_raw, Type %in% "Total")
-
-
-cases$Status <- car::recode(cases$Type,
+cases_raw$Status <- car::recode(cases_raw$Type,
 "'Received booster at least 7 days before being reported as a case' = 'Triple vax';
 'Fully vaccinated at least 7 days before reported as a case' = 'Double vax';
 'Partially vaccinated' = 'Single vax';
-'No doses received prior to being reported as a case' = 'Unvaccinated'; 
+'No doses received prior to being reported as a case' = 'Unvaccinated';
 'Not eligible for vaccine due to being less than 12 years old' = 'Not eligible';
 'Not eligible for vaccination at the time they were reported as a case' = 'Not eligible';
 'Under 12 years old' = 'Not eligible'")
 
+## Remove the Total column
+cases       <- subset(cases_raw, ! Type %in% "Total")
+cases_total <- subset(cases_raw, Type %in% "Total")
+
+cases_wide <- spread(cases_raw[, c("Date", "Status", "Cases")], Status, Cases)
+hospitalizations_wide <- spread(cases_raw[, c("Date", "Status", "Hospitalization")], Status, Hospitalization)
 
 knitr::kable(head(cases[,c("Date", "Status", "Cases", "Hospitalization", "ICU")]))
+```
 
-cases_wide <- spread(cases[, c("Date", "Status", "Cases")], Status, Cases)
+
+```{r inspect_data, echo = FALSE, eval = FALSE}
+## The classification data error in `Cases` is the following records
+cases_wide$Total_calc <- rowSums(cases_wide[,-which(names(cases_wide)%in%c("Date","Total"))], na.rm=TRUE)
+View(cases_wide[140:152,])
+
+# 2022-07-04
+tmp <- cases_total$Cases
+names(tmp) <- cases_total$Date
+plot(as.Date(names(tmp)), tmp, pch=1, cex=0.3)
+
+row_range <- 150:220
+View(hospitalizations_wide[row_range,])
+
+## On 2022-10-16 Hospitalization tally jumps significantly
+hospitalizations_wide[as.Date(hospitalizations_wide$Date)%in%c("2022-10-02", "2022-10-16"), ]
+
+## Ratio in favour of vaccinated
+hospitalizations_wide[as.Date(hospitalizations_wide$Date)%in%c("2022-10-16"), -1] /
+hospitalizations_wide[as.Date(hospitalizations_wide$Date)%in%c("2022-10-02"), -1]
+
+tmp2 <- cases_total$Hospitalization
+names(tmp2) <- cases_total$Date
+plot(as.Date(names(tmp2)), tmp2, pch=1, cex=0.3)
 ```
 
 Any decrease in a reported value relative to the preceding daily or weekly figure indicates a discrepancy in the published data. Such discrepancies may subsequently be corrected as the Ministry reviews and updates its records.
@@ -190,10 +218,10 @@ plotObj <- xyplot(Cases ~ Date, data=cases,  main=list("MoH Reported Cases", cex
 				  groups=Status, type="b", key=myKey, col = my_colours, par.settings = borderSettings,
 				  panel=function(x,y, ...){
   panel.superpose(x,y, pch=16, cex=0.3, ...)
-  panel.abline(v=as.POSIXct("2022-05-3 0:00"), lty=3, col="black", lwd=0.4)
-  
-  panel.text(as.POSIXct("2022-05-3 0:00")-86400*12, 700000, "3 May 2022", srt=90, cex=0.4)
-  panel.text(as.POSIXct("2022-05-3 0:00")+86400*12, 700000, "3 dose uptick", srt=90, cex=0.4)
+  panel.abline(v=as.Date("2022-05-03"), lty=3, col="black", lwd=0.4)
+
+  panel.text(as.Date("2022-05-03")-12, 700000, "3 May 2022", srt=90, cex=0.4)
+  panel.text(as.Date("2022-05-03")+12, 700000, "3 dose uptick", srt=90, cex=0.4)
 })
 
 if(draft) {
@@ -215,7 +243,7 @@ graphics.off()
 ```{r cases_crossover, echo = FALSE, eval = FALSE}
 graph_crossover <- FALSE
 
-moH <- x
+moH <- cases
 
 if(graph_crossover){
   ggplot(moH, aes(Date, Cases, colour = Status)) +
@@ -283,11 +311,11 @@ plotObj <- xyplot(log10(Cases) ~ Date, data=cases, groups=Status, main=list("MoH
                   scales = list(y = list(at=1:10, label=sprintf("%0.f", 10^(1:10)))),  par.settings = borderSettings,
                   type="b", key=myKey, col = my_colours, panel=function(x,y, ...){
   panel.superpose(x, y, pch=16, cex=0.3, ...)
-  panel.abline(v=as.POSIXct("2022-05-3 0:00"), lty=3, col="black", lwd=0.4)
+  panel.abline(v=as.Date("2022-05-03"), lty=3, col="black", lwd=0.4)
   
-  panel.text(as.POSIXct("2022-05-3 0:00")-86400*12, log10(1000000), "3 May 2022", srt=90, cex=0.4)
-  panel.text(as.POSIXct("2022-05-3 0:00")+86400*12, log10(1000000), "3 dose uptick", srt=90, cex=0.4)
-  panel.text(as.POSIXct("2022-07-11 0:00")+86400*15, log10(10000), "Classification errors", srt = 90, col="red", cex=0.4)
+  panel.text(as.Date("2022-05-03")-12, log10(1000000), "3 May 2022", srt=90, cex=0.4)
+  panel.text(as.Date("2022-05-03")+12, log10(1000000), "3 dose uptick", srt=90, cex=0.4)
+  panel.text(as.Date("2022-07-11")+15, log10(10000), "Classification errors", srt = 90, col="red", cex=0.4)
 })
 
 if(draft) {
@@ -322,12 +350,14 @@ plotObj <- xyplot(Hospitalization ~ Date, data=cases,  main=list("MoH Reported H
 				  groups=Status, type="b", key=myKey, col = my_colours,  par.settings = borderSettings,
 				  panel=function(x,y, ...){
   panel.superpose(x, y, pch=16, cex=0.3, ...)
-  panel.abline(v=as.POSIXct("2022-06-02 0:00"), lty=3, col="black", lwd=0.4)
+  panel.abline(v=as.Date("2022-06-02"), lty=3, col="black", lwd=0.4)
+  #panel.abline(v=as.Date("2022-08-26"), lty=3, col="blue", lwd=0.4)
+  #panel.abline(v=as.Date("2022-09-29"), lty=3, col="red", lwd=0.4)
   
-  panel.text(as.POSIXct("2022-06-02 0:00")-86400*12, 10000, "2 June 2022", srt=90, cex=0.5)
-  panel.text(as.POSIXct("2022-06-02 0:00")+86400*12, 10000, "3 dose uptick", srt=90, cex=0.5)
+  panel.text(as.Date("2022-06-02")-12, 10000, "2 June 2022", srt=90, cex=0.5)
+  panel.text(as.Date("2022-06-02")+12, 10000, "3 dose uptick", srt=90, cex=0.5)
   
-  # panel.text(as.POSIXct("2022-07-11 0:00")+86400*12, 1000, "Classification errors", srt = 90, col="red", cex=0.6)
+  # panel.text(as.Date("2022-07-11")12, 1000, "Classification errors", srt = 90, col="red", cex=0.6)
 })
 
 if(draft) {
@@ -348,9 +378,9 @@ graphics.off()
 There is an acceleration of reported COVID-19 cases in the `Triple Vax` category, the crossover point is around 2 June 2922. This is a lag of around a month from the Case crossover point of 3 May 2022.
 
 ```{r hospitalization_crossover, echo = FALSE, eval = FALSE}
-graph_crossover <- TRUE
+graph_crossover <- FALSE
 
-moH <- x
+moH <- cases
 
 if(graph_crossover){
   ggplot(moH, aes(Date, Hospitalization, colour = Status)) +
@@ -420,12 +450,14 @@ plotObj <- xyplot(log10(Hospitalization) ~ Date, data=cases, groups=Status,
 				   scales = list(y = list(at=1:10, label=sprintf("%0.f", 10^(1:10)))),
                   type="b", key=myKey, col = my_colours, panel=function(x,y, ...){
   panel.superpose(x, y, pch=16, cex=0.3, ...)
-  panel.abline(v=as.POSIXct("2022-06-02 0:00"), lty=3, col="black", lwd=0.4)
+  panel.abline(v=as.Date("2022-06-02"), lty=3, col="black", lwd=0.4)
+  #panel.abline(v=as.Date("2022-08-26"), lty=3, col="blue", lwd=0.4)
+  #panel.abline(v=as.Date("2022-09-29"), lty=3, col="red", lwd=0.4)
   
-  panel.text(as.POSIXct("2022-06-02 0:00")-86400*12, log10(13000), "2 June 2022", srt=90, cex=0.4)
-  panel.text(as.POSIXct("2022-06-02 0:00")+86400*12, log10(13000), "3 dose uptick", srt=90, cex=0.4)
+  panel.text(as.Date("2022-06-02")-12, log10(13000), "2 June 2022", srt=90, cex=0.4)
+  panel.text(as.Date("2022-06-02")+12, log10(13000), "3 dose uptick", srt=90, cex=0.4)
   
-  panel.text(as.POSIXct("2022-07-11 0:00")+86400*12, log10(100), "Reporting errors", srt = 90, col="red", cex=0.4)
+  panel.text(as.Date("2022-07-11")+12, log10(100), "Reporting errors", srt = 90, col="red", cex=0.4)
 })
 
 if(draft) {
@@ -456,6 +488,8 @@ plotObj <- xyplot(ICU ~ Date, data=cases,  main=list("MoH Reported ICU", cex=0.9
                   groups=Status, type="b", key=myKey, col = my_colours, par.settings = borderSettings,
 				  panel=function(x,y, ...){
   panel.superpose(x, y, pch=16, cex=0.3, ...)
+  #panel.abline(v=as.Date("2022-08-26"), lty=3, col="blue", lwd=0.4)
+  #panel.abline(v=as.Date("2022-09-29"), lty=3, col="red", lwd=0.4)
 })
 
 if(draft) {
@@ -482,8 +516,10 @@ plotObj <- xyplot(log10(ICU) ~ Date, data=cases, groups=Status, main=list("MoH R
                   scales = list(y = list(at=1:10, label=sprintf("%0.f", 10^(1:10)))), par.settings = borderSettings,
                   type="b", key=myKey, col = my_colours, panel=function(x,y, ...){
   panel.superpose(x, y, pch=16, cex=0.3, ...)
-  # panel.abline(v=as.POSIXct("2022-05-3 0:00"), lty=3, col="black", lwd=0.4)
-  # panel.text(as.POSIXct("2022-07-11 0:00")+86400*15, log10(1000), "Classification errors", srt = 90, col="red", cex=0.8)
+  # panel.abline(v=as.Date("2022-08-26"), lty=3, col="blue", lwd=0.4)
+  # panel.abline(v=as.Date("2022-09-29"), lty=3, col="red", lwd=0.4)
+  # panel.abline(v=as.Date("2022-05-03"), lty=3, col="black", lwd=0.4)
+  # panel.text(as.Date("2022-07-11")+15, log10(1000), "Classification errors", srt = 90, col="red", cex=0.8)
 })
 
 if(draft) {
@@ -499,12 +535,6 @@ if(draft) {
 }
 print(plotObj, new = !draft)
 graphics.off()
-```
-
-```{r, echo = FALSE, eval = FALSE}
-## The classification data error in `Cases` is the following records
-cases_wide$Total <- rowSums(cases_wide[,-1], na.rm=TRUE)
-knitr::kable(cases_wide[140:152,])
 ```
 
 \pagebreak
@@ -526,6 +556,16 @@ deaths_raw <- read_xlsx("covid_healthdata.xlsx", sheet = "Deaths", col_types=c("
 
 ## Remove column name spaces
 names(deaths_raw) <- gsub(" ", "_", names(deaths_raw))
+
+## POSIXct to date
+deaths_raw$Date <- as.Date(deaths_raw$Date)
+
+## Coerce to integers
+i <- vapply(deaths_raw, is.numeric, logical(1)) &
+     !vapply(deaths_raw, inherits, logical(1), "Date") &
+     !vapply(deaths_raw, inherits, logical(1), "POSIXt")
+
+deaths_raw[i] <- lapply(deaths_raw[i], as.integer)
 
 ## Remove the Total column
 deaths <- subset(deaths_raw, subset=! Age_group %in% "Total", select = c(Date, Age_group, Not_fully_vaccinated, Fully_vaccinated, Received_booster))
@@ -574,7 +614,7 @@ borderSettingsLocal <- list(
   )
 )
 
-myKey <- simpleKey(text=sort(unique(deaths$Age_group)), columns=5, cex = 0.8, space = "top")
+myKey <- simpleKey(text=sort(unique(deaths_gather$Age_group)), columns=5, cex = 0.8, space = "top")
  
 plotObj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2, y=0.2), groups=Age_group,
 				  aspect=1.5, scales=list(alternating=FALSE), key=myKey,  type="b", pch=16, cex=0.3,
@@ -584,8 +624,8 @@ plotObj <- xyplot(Deaths ~ Date | Status, data=deaths_gather, between=list(x=0.2
                   panel=function(x, y, ...){
                     panel.grid(...)
                     panel.superpose(x, y, col = my_colours, ...)
-                    panel.abline(v=as.POSIXct("2022-08-26", tz="UTC"), lty=3)
-                    panel.text(x=as.POSIXct("2022-08-26", tz="UTC")-15*24*3600, y=775, "MoH COVID-19 Mortality Report", srt=90, adj=0, cex = 0.6) #  ")
+                    panel.abline(v=as.Date("2022-08-26"), lty=3)
+                    panel.text(x=as.Date("2022-08-26")-15, y=775, "MoH COVID-19 Mortality Report", srt=90, adj=0, cex = 0.6) #  ")
                   })
 
 ## MoH Report: COVID-19 MORTALITY IN AOTEAROA NEW ZEALAND September 2022
